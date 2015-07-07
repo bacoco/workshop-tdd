@@ -10,20 +10,16 @@ import org.junit.Test;
 public class AplicadorDeDescontosTest {
 
 	AplicadorDeDescontos descontos;
-	List<Item> itens;
 	private static final double DELTA = 0.00001;
 	
 	@Before
 	public void setUp() {
 		descontos = new AplicadorDeDescontos();
-		itens = new ArrayList<Item>();
 	}
 
 	@Test
 	public void macbookEIphoneTemDeconto(){
-		itens.add(new Item("IPHONE", 1, 1500));
-		itens.add(new Item("MACBOOK", 1, 3000));
-		Compra compra = new Compra(itens);
+		Compra compra = new CompraBuilder().comItem("IPHONE", 1500).comItem("MACBOOK", 3000).build();
 		
 		descontos.aplica(compra);
 				
@@ -32,9 +28,7 @@ public class AplicadorDeDescontosTest {
 	
 	@Test
 	public void notebookEWindowsPhoneTemDesconto(){
-		itens.add(new Item("WINDOWS PHONE", 1, 1300));
-		itens.add(new Item("NOTEBOOK", 1, 2500));
-		Compra compra = new Compra(itens);
+		Compra compra = new CompraBuilder().comItem("WINDOWS PHONE", 1300).comItem("NOTEBOOK", 2500).build();
 		
 		descontos.aplica(compra);
 		
@@ -43,8 +37,7 @@ public class AplicadorDeDescontosTest {
 	
 	@Test
 	public void xboxTemDesconto(){
-		itens.add(new Item("XBOX", 1, 2500));
-		Compra compra = new Compra(itens);
+		Compra compra = new CompraBuilder().comItem("XBOX", 2500).build(); 
 		
 		descontos.aplica(compra);
 		
@@ -53,8 +46,7 @@ public class AplicadorDeDescontosTest {
 	
 	@Test
 	public void doisItensMenosQueMilTemDesconto(){
-		itens.add(new Item("ABAJUR", 2, 100));
-		Compra compra = new Compra(itens);
+		Compra compra = new CompraBuilder().comItem("ABAJUR", 2, 100).build();
 		
 		descontos.aplica(compra);
 		
@@ -64,24 +56,21 @@ public class AplicadorDeDescontosTest {
 	
 	@Test
 	public void tresOu4ItensEValorMaiorQue5MilTemDesconto(){
-		itens.add(new Item("MONITOR", 3, 1100));
-		Compra compra = new Compra(itens);
+		Compra compra = new CompraBuilder().comItem("MONITOR", 3, 1100).build();		
 		
 		descontos.aplica(compra);
 		
 		Assert.assertEquals((1100 * 3) * 0.95, compra.getValorLiquido(), DELTA);
 		
-		itens.add(new Item("TRECO", 1, 100));
-		Compra compra2 = new Compra(itens);
-		descontos.aplica(compra2);
+		compra = new CompraBuilder().comItem("MONITOR", 3, 1100).comItem("TRECO", 100).build();
+		descontos.aplica(compra);
 		
-		Assert.assertEquals(3400 * 0.95, compra2.getValorLiquido(), DELTA);
+		Assert.assertEquals(3400 * 0.95, compra.getValorLiquido(), DELTA);
 	}
-	
+		
 	@Test
 	public void maisQue5ItensEValorMaiorQue3MilTemDesconto(){
-		itens.add(new Item("COISA", 6, 1000));
-		Compra compra = new Compra(itens);
+		Compra compra = new CompraBuilder().comItem("COISA", 6, 1000).build();
 		
 		descontos.aplica(compra);
 		
